@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureHome | Case Study</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+
+    <style>
+        :root {
+            --color-bg: #000000;
+            --color-surface: #0a0a0a;
+            --color-primary: #ccff00;
+            --color-secondary: #777777;
+            --color-border: #151515;
+            --color-white: #ffffff;
+            
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+
+            --transition: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-white);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            cursor: none;
+            line-height: 1.4;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 8px; height: 8px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
+        .cursor-follower {
+            position: fixed;
+            width: 40px; height: 40px;
+            border: 1px solid var(--color-primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s var(--transition);
+            opacity: 0.5;
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 2rem 0;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+        .back-link {
+            font-family: var(--font-code);
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding-bottom: 8rem;
+        }
+        .hero-tag {
+            font-family: var(--font-code);
+            color: var(--color-primary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+        }
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 15vw, 10rem);
+            font-weight: 800;
+            line-height: 0.85;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            margin-left: -0.05em;
+        }
+        .hero-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--color-border);
+            padding-top: 2rem;
+        }
+        .repo{
+            padding: 7px 10px;
+            background-color: #ccff00;
+            color: #000000;
+            border: none;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-family: var(--font-code);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+        .meta-item span {
+            display: block;
+            font-family: var(--font-code);
+            font-size: 0.7rem;
+            color: var(--color-secondary);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        .meta-item p { font-size: 1.1rem; font-weight: 500; }
+
+        /* Big Image Showcase */
+        .showcase-img {
+            width: 100%;
+            height: 80vh;
+            background: var(--color-surface);
+            border-radius: 2rem;
+            overflow: hidden;
+            margin-bottom: 8rem;
+            border: 1px solid var(--color-border);
+        }
+        .showcase-img img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(1);
+            transition: filter 0.8s var(--transition);
+        }
+        .showcase-img:hover img { filter: grayscale(0); }
+
+        /* Tech Marquee */
+        .marquee {
+            padding: 4rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: 8rem;
+        }
+        .marquee-inner {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+        .marquee span {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-right: 4rem;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+            color: transparent;
+            transition: color 0.3s;
+        }
+        .marquee span:hover { color: var(--color-primary); -webkit-text-stroke: 1px var(--color-primary); }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Bento Grid */
+        .bento {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 8rem;
+        }
+        .bento-card {
+            background: var(--color-surface);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            border: 1px solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+        }
+        .card-lg { grid-column: span 8; }
+        .card-sm { grid-column: span 4; }
+        
+        .card-icon {
+            font-size: 2rem;
+            color: var(--color-primary);
+            margin-bottom: 2rem;
+            display: block;
+        }
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        .card-desc { color: var(--color-secondary); font-size: 1.1rem; max-width: 400px; }
+
+        .card-img {
+            position: absolute;
+            right: -10%; bottom: -10%;
+            width: 60%;
+            transform: rotate(-10deg);
+            transition: transform 0.5s var(--transition);
+        }
+        .bento-card:hover .card-img { transform: rotate(0deg) scale(1.05); }
+
+        /* Content Section */
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 8vw, 5rem);
+            margin-bottom: 4rem;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+        .split-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 10rem;
+        }
+        .split-content p {
+            font-size: 1.4rem;
+            color: var(--color-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 8rem 0;
+            text-align: center;
+            border-top: 1px solid var(--color-border);
+        }
+        .footer-link {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--color-primary);
+            text-decoration: none;
+            line-height: 1;
+        }
+
+        @media (max-width: 900px) {
+            .card-lg, .card-sm { grid-column: span 12; }
+            .split-content { grid-template-columns: 1fr; }
+            .hero { height: auto; padding-top: 12rem;}
+            .card-img { display: none;}
+            .hero-title{ padding-right: 10px;  font-size: 3rem;}
+        }
+
+        .reveal { opacity: 0; transform: translateY(50px); }
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <nav>
+        <div class="container nav-inner">
+            <a href="./index.html" class="back-link hover-trigger">
+                <i class="fas fa-arrow-left"></i> BACK TO PROJECTS
+            </a>
+            <div class="nav-brand" style="font-family: var(--font-display); font-weight: 800;">SECUREHOME.02</div>
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <section class="hero">
+            <span class="hero-tag reveal">PRODUCT DESIGN & BACKEND</span>
+            <h1 class="hero-title reveal">SECURE<br>HOME</h1>
+            
+            <div class="hero-meta reveal">
+                <div class="meta-item">
+                    <span>Year</span>
+                    <p>2025</p>
+                </div>
+                <div class="meta-item">
+                    <span>Role</span>
+                    <p>Fullstack Engineer</p>
+                </div>
+                <div class="meta-item">
+                    <span>Tech</span>
+                    <p>Django / Redis / Celery</p>
+                </div>
+                <div class="meta-item">
+                    <span>Source</span>
+                    <p><a href="https://github.com/GreatFi/secureHome" class="repo">View Repository <i class="fab fa-github"></i></a></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="showcase-img reveal">
+            <img src="./Images/mocup.png" onerror="this.src='https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'" alt="Main Showcase">
+        </section>
+
+        <section class="marquee">
+            <div class="marquee-inner">
+                <span>DJANGO</span><span>REDIS</span><span>CELERY</span><span>SQLITE</span><span>VANILLA JS</span><span>HTML</span>
+                <span>DJANGO</span><span>REDIS</span><span>CELERY</span><span>SQLITE</span><span>VANILLA JS</span><span>HTML</span>
+            </div>
+        </section>
+
+        <section class="split-content">
+            <h2 class="section-title reveal">SMART<br>LIVING.</h2>
+            <div class="reveal">
+                <p>SecureHome is a high-performance property marketplace engineered for scale. Built on the principle that property search should be as fast as a tap, we utilized asynchronous processing to ensure the backend never blocks the user's journey.</p>
+                <p style="margin-top: 2rem; font-size: 1.1rem;">From optimized database indexing to background task queues, every line of code was written to handle thousands of concurrent listings without a single millisecond of lag.</p>
+            </div>
+        </section>
+
+        <section class="bento">
+            <div class="bento-card card-lg reveal">
+                <i class="fas fa-bolt card-icon"></i>
+                <h3 class="card-title">ASYNC ENGINE</h3>
+                <p class="card-desc">Offloading email triggers and image processing to Celery workers for an instant UI experience.</p>
+                <img  src="./Images/mocup.png" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop'">
+            </div>
+            
+            <div class="bento-card card-sm reveal" style="background: var(--color-primary); color: black;">
+                <i class="fas fa-microchip card-icon" style="color: black;"></i>
+                <h3 class="card-title">OPTIMIZED</h3>
+                <p class="card-desc" style="color: rgba(0,0,0,0.6);">70% reduction in DB queries through advanced QuerySet optimization.</p>
+            </div>
+
+            <div class="bento-card card-sm reveal">
+                <i class="fas fa-map-marker-alt card-icon"></i>
+                <h3 class="card-title">GEOLOCATION</h3>
+                <p class="card-desc">Reactive form logic for seamless region-to-town filtering.</p>
+            </div>
+
+            <div class="bento-card card-lg reveal">
+                <i class="fas fa-shield-alt card-icon"></i>
+                <h3 class="card-title">LANDLORD HUB</h3>
+                <p class="card-desc">Comprehensive portfolio management with real-time analytics and draft controls.</p>
+                <img   src="./Images/frontmac.png" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2070&auto=format&fit=crop'">
+            </div>
+        </section>
+
+        <footer class="footer">
+            <span class="hero-tag">NEXT PROJECT</span>
+            <br>
+            <a href="./projectdetails.html" class="footer-link hover-trigger">TALK CASE STUDY</a>
+        </footer>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        // Cursor Logic
+        const cursor = document.querySelector('.cursor');
+        const follower = document.querySelector('.cursor-follower');
+        const triggers = document.querySelectorAll('.hover-trigger');
+
+        window.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0 });
+            gsap.to(follower, { x: e.clientX, y: e.clientY, duration: 0.15 });
+        });
+
+        triggers.forEach(t => {
+            t.addEventListener('mouseenter', () => {
+                cursor.classList.add('hovered');
+                gsap.to(cursor, { width: 50, height: 50, duration: 0.3 });
+            });
+            t.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hovered');
+                gsap.to(cursor, { width: 20, height: 20, duration: 0.3 });
+            });
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.utils.toArray('.reveal').forEach(el => {
+            gsap.to(el, {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                ease: 'expo.out',
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 85%'
+                }
+            });
+        });
+
+        // Parallax on images
+        gsap.to('.showcase-img img', {
+            yPercent: 20,
+            ease: "none",
+            scrollTrigger: {
+                trigger: '.showcase-img',
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+    </script>
+</body>
+</html>
